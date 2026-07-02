@@ -50,8 +50,8 @@ int  number_vertices = 31; // number of species in the system in the mal-crn (dy
 bool bool_siphon = true; //  boolean set to true if a given set of species is a siphon
 int siphon_size;
 int number_siphon = 0;
-// assuming that stoichiometric matrix is written as N = r-p:
-//matrix with the beta factor or product factor of the stoichiometric matrix 
+
+
 int** stochio_matrix_p=NULL;
    stochio_matrix_p = new int*[number_vertices+1];
    for (int i=1;i<= number_vertices; ++i){stochio_matrix_p[i] = new int[nbre_reactions+1];}
@@ -61,7 +61,7 @@ int** stochio_matrix_p=NULL;
      stochio_matrix_p[i][j] =0;
     }
    }
-//matrix with the alpha factor or reactant factor of the stoichiometric matrix 
+
 int** stochio_matrix_r=NULL;
    stochio_matrix_r = new int*[number_vertices+1];
    for (int i=1;i<= number_vertices; ++i){stochio_matrix_r[i] = new int[nbre_reactions+1];}
@@ -71,7 +71,7 @@ int** stochio_matrix_r=NULL;
      stochio_matrix_r[i][j] =0;
     }
    }
-// here we complete the vector with i=1,15 species to  be added ina siphon 
+
 int*    permutation_added;
    permutation_added= new int[number_vertices+1];
    for (int i=1; i<=number_vertices;++i){permutation_added[i] = 0;}
@@ -84,24 +84,24 @@ string  filename = "RESULTS-LISTE-COMPLETE-SIPHONS.txt";
  ofstream output_file(filename.c_str());
 if (output_file.is_open()){
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///// siphon siwe 1
+
  for (int ct1=1; ct1<= number_vertices; ++ct1)
  {
 	siphon_size = ct1;   
      cout << "looking for siphon of size  "<< ct1  << endl;
 	std::string bitmask(ct1, 1); // K leading 1's
     bitmask.resize(number_vertices, 0); // N-K trailing 0's
-     //cout << "FUCK you 2"  << endl;
+     
     // print integers and permute bitmask
     do {
         for (int i = 0; i < number_vertices; ++i) // [0..N-1] integers
         { 
             if (bitmask[i]) {/*std::cout << " " << i+1;*/permutation_added[i+1] = 1;}
         }
-		// cout << "FUCK you 3"  << endl;
+		
 		bool_siphon = true;  
         test_siphon(permutation_added,stochio_matrix_p,stochio_matrix_r,bool_siphon,siphon_size,nbre_reactions, number_vertices );
-	    //cout << "FUCK you 3b"  << endl;
+	    
 		if (bool_siphon)
 	    {
 	    number_siphon++;
@@ -115,17 +115,10 @@ if (output_file.is_open()){
 	    output_file<<""<<endl;
 	    }
 		for (int i=1; i<=number_vertices;++i){permutation_added[i] = 0;}
-		//cout << "FUCK you 4"  << endl;
-		// std::cout << std::endl;
+	
     } while (std::prev_permutation(bitmask.begin(), bitmask.end()));
 	
-	
-	
-   
-	
-
 } 
-	
 
 output_file.close();
 }else{cout << "file can not be opened"  << endl;}											 		  	 
@@ -137,12 +130,11 @@ cout <<"========================================================================
 cout <<" PROGRAM HAS COMPLETED THE TASK, PROGRAM IS BEING CLOSED, COMPLETE CPU TIME FOR COMPLETION IS: "<< cpu_duration<<" SECONDS"<< endl;
 cout <<"==================================================================================================================="<< endl;
 cout << ""<< endl;
-//deallocation of all variables, vectors and matrices
 for (int i=1;i<= number_vertices;++i){delete[] stochio_matrix_p[i];}
 delete [] stochio_matrix_p;
 for (int i=1;i<= number_vertices;++i){delete[] stochio_matrix_r[i];}
 delete [] stochio_matrix_r;
- delete [] permutation_added;
+delete [] permutation_added;
 
 return 0;
 } // end main function
